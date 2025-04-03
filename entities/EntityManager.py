@@ -24,6 +24,10 @@ class EntityManager:
         y = randint(0, CONFIG.HEIGHT - BALL_RADIUS)
         self.entities.append(Ball(x, y, self.images["ball"]))
 
+
+    def clear_entity(self):
+        self.entities = []
+
     def spawn_bonus(self):
         x = randint(0, CONFIG.WIDTH - BONUS_SIZE[0])
         y = randint(0, CONFIG.WIDTH - BONUS_SIZE[1])

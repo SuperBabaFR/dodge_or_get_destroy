@@ -1,6 +1,4 @@
 import pygame
-from pygame import Color
-from pygame.color import THECOLORS
 
 from config import CONFIG
 from entities.EntityManager import EntityManager
@@ -12,6 +10,7 @@ from scenes.Scene import Scene
 class GameScene(Scene):
 
     def __init__(self):
+        super().__init__()
         self.score = 0
         self.player_img = None
         self.player = None
@@ -28,11 +27,14 @@ class GameScene(Scene):
 
     def init_ui(self):
         self.scoreUI = TextUI(0, 0, "Score : 0", 60)
+        self.HPUI = TextUI(0, 40, "HP : 3", 60)
         self.uiElements.append(self.scoreUI)
+        self.uiElements.append(self.HPUI)
 
-    def start(self):
+    def start(self, data={}):
         self.player = Player(CONFIG.WIDTH / 2, CONFIG.HEIGHT / 2, self.player_img)
         self.score = 0
+        self.entityManager.clear_entity()
 
     def update(self, dt):
 
@@ -49,6 +51,13 @@ class GameScene(Scene):
         self.score += dt
 
         self.scoreUI.update_text("Score : " + str(int(self.score)))
+        self.HPUI.update_text("HP : " + str(int(self.player.life)))
+
+        if not self.player.is_alive():
+            self.next_scene = "gameover"
+
+    def get_data(self):
+        return {"score": self.score}
 
     def draw(self, screen):
         # BACKGROUND COLOR

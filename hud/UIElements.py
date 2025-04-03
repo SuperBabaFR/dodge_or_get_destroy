@@ -12,13 +12,17 @@ class StaticUIElement:
 
 
 class TextUI(StaticUIElement):
-    def __init__(self, x, y, text, size, font=None, color=(255,255,255)):
+    def __init__(self, x, y, text, size, centered=False, font=None, color=(255,255,255)):
 
         self.color = color
         self.font = pygame.font.Font(font, size)
         self.element = self.font.render(text, True, color)
 
-        super().__init__(x, y, self.element)
+        if centered:
+            pos = self.element.get_rect(center=(x, y)).topleft
+            super().__init__(pos[0], pos[1], self.element)
+        else:
+            super().__init__(x, y, self.element)
 
     def update_text(self, text, color=None):
         self.element = self.font.render(text, True, color if color is not None else self.color)
