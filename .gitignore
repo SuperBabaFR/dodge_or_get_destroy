@@ -3,3 +3,10 @@
 .idea/inspectionProfiles/Project_Default.xml
 .idea/modules.xml
 .idea/vcs.xml
+
+# Ignorer tous les dossiers __pycache__ à tous les niveaux
+__pycache__/
+**/__pycache__/
+
+*.pyc
+/entities/__pycache__
