@@ -38,14 +38,23 @@ class Player(GameEntity):
         if self.invulnerable:
             return False
 
+        collided = False
+
         if other.collision_type == "rect":
             if self.hitbox.colliderect(other.hitbox):
-                self.life_manager(-1)
-                return True
+                collided = True
         elif other.collision_type == "circle":
             if collide_circle_rect(other.hitbox, self.hitbox):
+                collided = True
+
+        if collided:
+            if other.name == "ball":
                 self.life_manager(-1)
-                return True
+            elif other.name == "life_bonus":
+                self.life_manager(1)
+
+        return collided
+
 
     def life_manager(self, value):
         print("life_manager | vie : ", self.life + value)

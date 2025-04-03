@@ -59,9 +59,7 @@ class Bonus(Bouncer):
 
         self.x = x
         self.y = y
-        self.name = "bonus"
+        self.name = bonus_type
         self.collision_type = "circle"
 
         super().__init__(self)
-
-        self.bonus_type = bonus_type
