@@ -2,13 +2,15 @@ import pygame
 
 from config import CONFIG
 from entities.EntityManager import EntityManager
-from entities.GameObjects import Player
+from entities.Player import Player
 from scenes.Scene import Scene
 
 
 class GameScene(Scene):
 
     def __init__(self):
+        self.player_img = None
+        self.player = None
         self.entityManager = EntityManager()
 
     def init_images(self):
@@ -23,8 +25,10 @@ class GameScene(Scene):
         self.entityManager.AutoSpawn(dt)
 
         for entity in self.entityManager.entities:
-            self.player.collide(entity)
-            entity.update(dt)
+            if self.player.collide(entity):
+                self.entityManager.entities.remove(entity)
+            else:
+                entity.update(dt)
 
         self.player.update(dt)
 
