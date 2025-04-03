@@ -1,11 +1,24 @@
+from dataclasses import dataclass
+
 import pygame
 
 from config import CONFIG
 from entities.GameEntity import GameEntity
+from entities.GameObjects import Bonus, BONUS_TYPE
+from util.TimeObjects import CountdownTimer
 from util.collisions import collide_circle_rect
 from pygame import math as m
 
-PLAYER_SIZE = (64,64)
+PLAYER_SIZE = (64, 64)
+
+
+
+class Effect:
+    def __init__(self, name, duration):
+        self.name = name
+        self.countdown = CountdownTimer(duration)
+        self.countdown.start()
+
 
 class Player(GameEntity):
     def __init__(self, x, y, image):
@@ -15,13 +28,15 @@ class Player(GameEntity):
 
         self.default_speed = 500
         self.speed = self.default_speed
-        self.direction = pygame.math.Vector2(0,0)
+        self.direction = pygame.math.Vector2(0, 0)
 
         self.life_max = 3
         self.life = self.life_max
 
-        self.invulnerability_time = 0
+        self.invulnerability = CountdownTimer(1)
         self.invulnerable = False
+
+        self.effects_list = []
 
     def reset(self, x, y):
         self.x = x
@@ -31,11 +46,13 @@ class Player(GameEntity):
         self.speed = self.default_speed
 
         self.life = self.life_max
-        self.invulnerability_time = 0
+
+        self.effects_list = []
+        self.invulnerability = CountdownTimer(1)
         self.invulnerable = False
 
     def collide(self, other: GameEntity):
-        if self.invulnerable:
+        if self.invulnerable and other.name == "ball":
             return False
 
         collided = False
@@ -50,18 +67,24 @@ class Player(GameEntity):
         if collided:
             if other.name == "ball":
                 self.life_manager(-1)
-            elif other.name == "life_bonus":
-                self.life_manager(1)
+            elif other.name == "bonus":
+                bonus: Bonus = other
+
+                if bonus.bonus_type == BONUS_TYPE.life_bonus:
+                    print("Get life_bonus")
+                    self.life_manager(1)
+                elif bonus.bonus_type == BONUS_TYPE.speed_boost:
+                    self.effects_list.append(Effect(bonus.bonus_type, bonus.duration))
+                    print("Add Effect", bonus.bonus_type,)
 
         return collided
-
 
     def life_manager(self, value):
         print("life_manager | vie : ", self.life + value)
 
         if value < 0:
             self.invulnerable = True
-            self.invulnerability_time = 1
+            self.invulnerability.start()
 
         self.life += value
 
@@ -87,13 +110,28 @@ class Player(GameEntity):
 
         self.update_hitbox()
 
+        # Gestion des effets
+        self.effects_update(dt)
+
         # Gestion de l'invincibilité
         if self.invulnerable:
-            self.invulnerability_time -= dt
-
-            if self.invulnerability_time <= 0:
+            print("invulnerable timeleft : ", self.invulnerability.is_alive(dt))
+            if self.invulnerability.is_alive(dt):
                 self.invulnerable = False
 
+    def effects_update(self, dt):
+        for effect in self.effects_list:
+            is_alive = effect.countdown.is_alive(dt)
+
+            match effect.name:
+                case BONUS_TYPE.speed_boost:
+                    self.speed = self.default_speed * 2 if is_alive else self.default_speed
+                case _:
+                    pass
+
+            if not is_alive:
+                print(effect.name, "is dead")
+                self.effects_list.remove(effect)
 
     def inputs(self):
         self.direction.x = 0

@@ -12,6 +12,7 @@ class TimeCycleTrigger:
             return True
         return False
 
+
 class CountdownTimer:
     def __init__(self, duration):
         self.duration = duration
@@ -21,7 +22,10 @@ class CountdownTimer:
         self.remaining = self.duration
 
     def is_alive(self, dt):
-        if self.remaining > 0 :
-            self.remaining = self.remaining - dt if self.remaining < 0 else 0
+
+        if self.remaining > 0:
+            self.remaining -= dt
+            if self.remaining < 0:
+                self.remaining = 0
 
         return self.remaining > 0

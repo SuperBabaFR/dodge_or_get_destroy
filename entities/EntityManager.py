@@ -3,7 +3,7 @@ from random import randint, choice
 import pygame
 
 from config import CONFIG
-from entities.GameObjects import Ball, BALL_RADIUS, BONUS_SIZE, Bonus
+from entities.GameObjects import Ball, BALL_RADIUS, BONUS_SIZE, Bonus, BONUS_TYPE
 from util.TimeObjects import TimeCycleTrigger
 
 
@@ -16,8 +16,8 @@ class EntityManager:
 
     def init(self):
         self.images["ball"] = pygame.image.load(CONFIG.IMAGE_FOLDER+"/entity/ball.png").convert_alpha()
-        self.images["life_bonus"] = pygame.image.load(CONFIG.IMAGE_FOLDER+"/entity/bonus/life_bonus.png").convert_alpha()
-        self.images["speed_boost"] = pygame.image.load(CONFIG.IMAGE_FOLDER+"/entity/bonus/speed_boost.png").convert_alpha()
+        self.images[BONUS_TYPE.life_bonus] = pygame.image.load(CONFIG.IMAGE_FOLDER+"/entity/bonus/life_bonus.png").convert_alpha()
+        self.images[BONUS_TYPE.speed_boost] = pygame.image.load(CONFIG.IMAGE_FOLDER+"/entity/bonus/speed_boost.png").convert_alpha()
 
     def spawn_ball(self):
         x = randint(0, CONFIG.WIDTH - BALL_RADIUS)
@@ -28,7 +28,7 @@ class EntityManager:
         x = randint(0, CONFIG.WIDTH - BONUS_SIZE[0])
         y = randint(0, CONFIG.WIDTH - BONUS_SIZE[1])
 
-        bonus_choice = choice(["life_bonus", "speed_boost"])
+        bonus_choice = choice([BONUS_TYPE.life_bonus, BONUS_TYPE.speed_boost])
 
         self.entities.append(Bonus(x, y, self.images[bonus_choice], bonus_choice))
 

@@ -1,3 +1,5 @@
+from enum import Enum
+
 import pygame
 from pygame import math as m
 import math
@@ -7,7 +9,12 @@ from config import CONFIG
 from entities.GameEntity import GameEntity
 
 BALL_RADIUS = 64
-BONUS_SIZE = (64,64)
+BONUS_SIZE = (64, 64)
+
+
+class BONUS_TYPE(Enum):
+    life_bonus = "life_bonus",
+    speed_boost = "speed_boost"
 
 
 class Bouncer(GameEntity):
@@ -20,7 +27,6 @@ class Bouncer(GameEntity):
         self.speed = random.randint(300, 900)
 
         self.offset = 1
-
 
     def update(self, dt):
         self.x += self.direction.x * self.speed * dt
@@ -38,7 +44,6 @@ class Bouncer(GameEntity):
             self.x = m.clamp(self.x, self.offset, CONFIG.WIDTH - self.width - self.offset)
 
         self.update_hitbox()
-
 
 
 class Ball(Bouncer):
@@ -59,7 +64,13 @@ class Bonus(Bouncer):
 
         self.x = x
         self.y = y
-        self.name = bonus_type
+        self.name = "bonus"
         self.collision_type = "circle"
+
+        self.bonus_type = bonus_type
+        self.duration = 0
+
+        if bonus_type == BONUS_TYPE.speed_boost:
+            self.duration = 10
 
         super().__init__(self)

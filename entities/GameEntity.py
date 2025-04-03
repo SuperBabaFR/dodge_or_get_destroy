@@ -37,5 +37,3 @@ class GameEntity:
             radius = self.hitbox["radius"]
             self.hitbox["center"] = (self.x + radius, self.y + radius)
 
-# class StaticEntity(GameEntity):
-#     pass
