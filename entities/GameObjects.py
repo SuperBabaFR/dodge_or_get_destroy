@@ -1,10 +1,11 @@
 import pygame
-from pygame import math as m
+from pygame import math as m, Rect
 import math
 
 import random
 from config import CONFIG
 from entities.GameEntity import GameEntity
+from util.collisions import collide_circle_rect
 
 BALL_RADIUS = 64
 PLAYER_SIZE = (64,64)
@@ -15,12 +16,12 @@ class Ball(GameEntity):
 
         self.image = pygame.transform.scale(image, (BALL_RADIUS, BALL_RADIUS))
 
-        super().__init__(x, y, self.image)
+        super().__init__(x, y, self.image, "ball")
 
         angle = random.uniform(0, 2 * math.pi)
         self.direction = pygame.math.Vector2(math.cos(angle), math.sin(angle))
 
-        self.speed = random.randint(300, 900)
+        self.speed = random.randint(3, 9)
 
         self.offset = 1
 
@@ -44,10 +45,16 @@ class Player(GameEntity):
     def __init__(self, x, y, image):
         self.image = pygame.transform.scale(image, PLAYER_SIZE)
 
-        super().__init__(x - PLAYER_SIZE[0], y - PLAYER_SIZE[1], self.image)
+        super().__init__(x - PLAYER_SIZE[0], y - PLAYER_SIZE[1], self.image, "player")
 
         self.speed = 500
         self.direction = pygame.math.Vector2(0,0)
+
+    def collide(self, other: GameEntity):
+
+        if other.name == "ball":
+            if collide_circle_rect(other.rect, other.rect.width // 2, self.rect):
+                print("collide")
 
     def update(self, dt):
         self.inputs()
