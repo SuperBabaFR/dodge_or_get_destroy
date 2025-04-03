@@ -16,12 +16,12 @@ class Ball(GameEntity):
 
         self.image = pygame.transform.scale(image, (BALL_RADIUS, BALL_RADIUS))
 
-        super().__init__(x, y, self.image, "ball")
+        super().__init__(x, y, self.image, "ball", "circle")
 
         angle = random.uniform(0, 2 * math.pi)
         self.direction = pygame.math.Vector2(math.cos(angle), math.sin(angle))
 
-        self.speed = random.randint(3, 9)
+        self.speed = random.randint(300, 900)
 
         self.offset = 1
 
@@ -29,16 +29,18 @@ class Ball(GameEntity):
         self.x += self.direction.x * self.speed * dt
         self.y += self.direction.y * self.speed * dt
 
-        limit_edge_w = self.x < 0 or self.x + BALL_RADIUS >= CONFIG.WIDTH
-        limit_edge_h = self.y < 0 or self.y + BALL_RADIUS >= CONFIG.HEIGHT
+        limit_edge_w = self.x < 0 or self.x + self.width >= CONFIG.WIDTH
+        limit_edge_h = self.y < 0 or self.y + self.height >= CONFIG.HEIGHT
 
         if limit_edge_h:
             self.direction.y = - self.direction.y
-            self.y = m.clamp(self.y, self.offset, CONFIG.HEIGHT - BALL_RADIUS - self.offset)
+            self.y = m.clamp(self.y, self.offset, CONFIG.HEIGHT - self.height - self.offset)
 
         if limit_edge_w:
             self.direction.x = - self.direction.x
-            self.x = m.clamp(self.x, self.offset, CONFIG.WIDTH - BALL_RADIUS - self.offset)
+            self.x = m.clamp(self.x, self.offset, CONFIG.WIDTH - self.width - self.offset)
+
+        self.update_hitbox()
 
 
 class Player(GameEntity):
@@ -47,29 +49,77 @@ class Player(GameEntity):
 
         super().__init__(x - PLAYER_SIZE[0], y - PLAYER_SIZE[1], self.image, "player")
 
-        self.speed = 500
+        self.default_speed = 500
+        self.speed = self.default_speed
         self.direction = pygame.math.Vector2(0,0)
 
-    def collide(self, other: GameEntity):
+        self.life_max = 3
+        self.life = self.life_max
 
-        if other.name == "ball":
-            if collide_circle_rect(other.rect, other.rect.width // 2, self.rect):
-                print("collide")
+        self.invulnerability_time = 0
+        self.invulnerable = False
+
+    def reset(self, x, y):
+        self.x = x
+        self.y = y
+        self.update_hitbox()
+
+        self.speed = self.default_speed
+
+        self.life = self.life_max
+        self.invulnerability_time = 0
+        self.invulnerable = False
+
+    def collide(self, other: GameEntity):
+        if self.invulnerable:
+            return
+
+        if other.collision_type == "rect":
+            if self.hitbox.colliderect(other.hitbox):
+                self.life_manager(-1)
+        elif other.collision_type == "circle":
+            if collide_circle_rect(other.hitbox, self.hitbox):
+                self.life_manager(-1)
+
+    def life_manager(self, value):
+
+        print("life_manager | vie : ", self.life + value)
+
+        if value < 0:
+            self.invulnerable = True
+            self.invulnerability_time = 1
+
+        self.life += value
+
+    def is_alive(self):
+        return self.life > 0
 
     def update(self, dt):
+        # Mouvements au clavier
         self.inputs()
-
+        # Application du mouvement
         self.x += self.direction.x * self.speed * dt
         self.y += self.direction.y * self.speed * dt
 
-        limit_edge_w = self.x < 0 or self.x + PLAYER_SIZE[0] >= CONFIG.WIDTH
-        limit_edge_h = self.y < 0 or self.y + PLAYER_SIZE[1] >= CONFIG.HEIGHT
+        # Limitations à la fenetre
+        limit_edge_w = self.x < 0 or self.x + self.width >= CONFIG.WIDTH
+        limit_edge_h = self.y < 0 or self.y + self.height >= CONFIG.HEIGHT
 
         if limit_edge_h:
-            self.y = m.clamp(self.y, 0, CONFIG.HEIGHT - PLAYER_SIZE[0])
+            self.y = m.clamp(self.y, 0, CONFIG.HEIGHT - self.height)
 
         if limit_edge_w:
-            self.x = m.clamp(self.x, 0, CONFIG.WIDTH - PLAYER_SIZE[1])
+            self.x = m.clamp(self.x, 0, CONFIG.WIDTH - self.width)
+
+        self.update_hitbox()
+
+        # Gestion de l'invincibilité
+        if self.invulnerable:
+            self.invulnerability_time -= dt
+
+            if self.invulnerability_time <= 0:
+                self.invulnerable = False
+
 
     def inputs(self):
         self.direction.x = 0

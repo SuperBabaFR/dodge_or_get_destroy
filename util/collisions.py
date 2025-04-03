@@ -1,13 +1,16 @@
 
 
-def collide_circle_rect(circle_rect, radius, rect):
-    circle_x = circle_rect.centerx
-    circle_y = circle_rect.centery
+def collide_circle_rect(circle_hitbox, rect_hitbox):
+    circle_x, circle_y = circle_hitbox["center"]
+    radius = circle_hitbox["radius"]
 
-    closest_x = max(rect.left, min(circle_x, rect.right))
-    closest_y = max(rect.top, min(circle_y, rect.bottom))
+    # Trouver le point du rectangle le plus proche du centre du cercle
+    closest_x = max(rect_hitbox.left, min(circle_x, rect_hitbox.right))
+    closest_y = max(rect_hitbox.top, min(circle_y, rect_hitbox.bottom))
 
+    # Calculer la distance entre ce point et le centre du cercle
     dx = circle_x - closest_x
     dy = circle_y - closest_y
+    distance_squared = dx * dx + dy * dy
 
-    return dx * dx + dy * dy < radius * radius
+    return distance_squared <= radius * radius
