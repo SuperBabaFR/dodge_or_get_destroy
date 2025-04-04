@@ -24,8 +24,9 @@ class GameOverScene(Scene):
             f.close()
 
         if self.score > self.best_score:
+            self.best_score = self.score
             with open('data/data.json', 'w') as f:
-                f.write(json.dumps({'best_score':self.score}))
+                f.write(json.dumps({'best_score':int(self.best_score)}))
                 f.close()
 
         self.init_ui()
@@ -37,7 +38,7 @@ class GameOverScene(Scene):
         phrases = {
             0 : "Game Over",
             100 : f"Score: {int(self.score)}",
-            180 : f"Best score: {self.best_score}",
+            180 : f"Best score: {int(self.best_score)}",
             160+80*2 : "ESPACE pour rejouer",
             160+80*3 : "ECHAP pour quitter"
         }
