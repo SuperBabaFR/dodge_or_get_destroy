@@ -1,6 +1,7 @@
 import pygame
 
 from config import CONFIG
+from effects.StarryBackground import StarryBackground
 from hud.UIElements import TextUI
 from scenes.Scene import Scene
 
@@ -36,8 +37,7 @@ class MenuScene(Scene):
 
 
     def draw(self, screen):
-        # BACKGROUND COLOR
-        screen.fill((100, 100, 100))
+
 
         for uiElement in self.uiElements:
             uiElement.draw(screen)

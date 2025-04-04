@@ -15,14 +15,16 @@ class EntityManager:
         self.bonus_spawn_cycle = TimeCycleTrigger(4)
 
     def init(self):
-        self.images["ball"] = pygame.image.load(CONFIG.IMAGE_FOLDER+"/entity/ball.png").convert_alpha()
+        for i in range(1,3):
+            self.images["asteroid_"+str(i)] = pygame.image.load(CONFIG.IMAGE_FOLDER+"/entity/asteroids/asteroid_" + str(i) + ".png").convert_alpha()
         self.images[BONUS_TYPE.life_bonus] = pygame.image.load(CONFIG.IMAGE_FOLDER+"/entity/bonus/life_bonus.png").convert_alpha()
         self.images[BONUS_TYPE.speed_boost] = pygame.image.load(CONFIG.IMAGE_FOLDER+"/entity/bonus/speed_boost.png").convert_alpha()
 
     def spawn_ball(self):
         x = randint(0, CONFIG.WIDTH - BALL_RADIUS)
         y = randint(0, CONFIG.HEIGHT - BALL_RADIUS)
-        self.entities.append(Ball(x, y, self.images["ball"]))
+        img_name = "asteroid_" + str(randint(1,2))
+        self.entities.append(Ball(x, y, self.images[img_name]))
 
 
     def clear_entity(self):

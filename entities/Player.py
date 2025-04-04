@@ -6,10 +6,10 @@ from config import CONFIG
 from entities.GameEntity import GameEntity
 from entities.GameObjects import Bonus, BONUS_TYPE
 from util.TimeObjects import CountdownTimer
-from util.collisions import collide_circle_rect
+from util.collisions import collide_circle_rect, collide_circle_circle
 from pygame import math as m
 
-PLAYER_SIZE = (64, 64)
+PLAYER_SIZE = (100, 100)
 
 
 
@@ -24,7 +24,7 @@ class Player(GameEntity):
     def __init__(self, x, y, image):
         self.image = pygame.transform.scale(image, PLAYER_SIZE)
 
-        super().__init__(x - PLAYER_SIZE[0], y - PLAYER_SIZE[1], self.image, "player")
+        super().__init__(x - PLAYER_SIZE[0], y - PLAYER_SIZE[1], self.image, "player", "circle")
 
         self.default_speed = 500
         self.speed = self.default_speed
@@ -58,10 +58,10 @@ class Player(GameEntity):
         collided = False
 
         if other.collision_type == "rect":
-            if self.hitbox.colliderect(other.hitbox):
+            if collide_circle_rect(self.hitbox, other.hitbox):
                 collided = True
         elif other.collision_type == "circle":
-            if collide_circle_rect(other.hitbox, self.hitbox):
+            if collide_circle_circle(other.hitbox, self.hitbox):
                 collided = True
 
         if collided:

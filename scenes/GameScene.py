@@ -19,7 +19,7 @@ class GameScene(Scene):
 
     def init_images(self):
         self.entityManager.init()
-        self.player_img = pygame.image.load(CONFIG.IMAGE_FOLDER + "/entity/personnage/player.png").convert_alpha()
+        self.player_img = pygame.image.load(CONFIG.IMAGE_FOLDER + "/entity/personnage/alien.png").convert_alpha()
 
     def init_entities(self):
         self.start()
@@ -61,7 +61,7 @@ class GameScene(Scene):
 
     def draw(self, screen):
         # BACKGROUND COLOR
-        screen.fill((100, 100, 100))
+        # screen.fill((100, 100, 100))
 
         for entity in self.entityManager.entities:
             entity.draw(screen)

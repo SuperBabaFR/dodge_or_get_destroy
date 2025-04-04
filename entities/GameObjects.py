@@ -24,7 +24,7 @@ class Bouncer(GameEntity):
         angle = random.uniform(0, 2 * math.pi)
         self.direction = pygame.math.Vector2(math.cos(angle), math.sin(angle))
 
-        self.speed = random.randint(300, 900)
+        self.speed = random.randint(200, 400)
 
         self.offset = 1
 
