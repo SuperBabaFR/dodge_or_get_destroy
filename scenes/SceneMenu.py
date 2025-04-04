@@ -19,14 +19,21 @@ class MenuScene(Scene):
         self.init_ui()
 
     def init_ui(self):
-        text = TextUI(CONFIG.WIDTH / 2, CONFIG.HEIGHT / 5, "Menu principal", 60, True)
-        self.uiElements.append(text)
+        self.uiElements = []
 
-        text = TextUI(CONFIG.WIDTH / 2, CONFIG.HEIGHT / 3, "ESPACE pour jouer", 60, True)
-        self.uiElements.append(text)
+        phrases = {
+            0 : "Dodge or Get Destroy",
+            160 : "ESPACE pour rejouer",
+            240 : "ECHAP pour quitter"
+        }
 
-        text = TextUI(CONFIG.WIDTH / 2, CONFIG.HEIGHT / 2, "ECHAP pour quitter", 60, True)
-        self.uiElements.append(text)
+        start_y = CONFIG.HEIGHT / 3
+
+        for line_spacing, phrase in phrases.items():
+            x = CONFIG.WIDTH / 2
+            y = start_y + line_spacing
+            text = TextUI(x,y, phrase, 60, True)
+            self.uiElements.append(text)
 
 
     def update(self, dt):

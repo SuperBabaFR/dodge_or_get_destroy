@@ -115,8 +115,7 @@ class Player(GameEntity):
 
         # Gestion de l'invincibilité
         if self.invulnerable:
-            print("invulnerable timeleft : ", self.invulnerability.is_alive(dt))
-            if self.invulnerability.is_alive(dt):
+            if not self.invulnerability.is_alive(dt):
                 self.invulnerable = False
 
     def effects_update(self, dt):
