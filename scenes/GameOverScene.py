@@ -25,7 +25,7 @@ class GameOverScene(Scene):
 
         if self.score > self.best_score:
             with open('data/data.json', 'w') as f:
-                f.write(json.dumps({'best_score':self.best_score}))
+                f.write(json.dumps({'best_score':self.score}))
                 f.close()
 
         self.init_ui()
