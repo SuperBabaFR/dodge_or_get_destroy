@@ -46,7 +46,7 @@ class Bouncer(GameEntity):
         self.update_hitbox()
 
 
-class Ball(Bouncer):
+class Asteroid(Bouncer):
     def __init__(self, x, y, image):
         self.image = pygame.transform.scale(image, (BALL_RADIUS, BALL_RADIUS))
 

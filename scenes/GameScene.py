@@ -5,6 +5,7 @@ from entities.EntityManager import EntityManager
 from entities.Player import Player
 from hud.UIElements import TextUI
 from scenes.Scene import Scene
+from util.SoundManager import SoundManager
 
 
 class GameScene(Scene):
@@ -16,14 +17,16 @@ class GameScene(Scene):
         self.player = None
         self.entityManager = EntityManager()
         self.uiElements = []
+        sfx = {"explosion": "explosion.mp3", "game_start": "game-start.mp3", "game_over": "game-over.mp3", "bonus": "bonus.mp3"}
+        self.sound_manager = SoundManager(sfx, "")
 
     def init_images(self):
         self.entityManager.init()
         self.player_img = pygame.image.load(CONFIG.IMAGE_FOLDER + "/entity/personnage/alien.png").convert_alpha()
 
     def init_entities(self):
-        self.start()
         self.init_ui()
+        self.sound_manager.init()
 
     def init_ui(self):
         self.scoreUI = TextUI(0, 0, "Score : 0", 60)
@@ -35,6 +38,7 @@ class GameScene(Scene):
         self.player = Player(CONFIG.WIDTH / 2, CONFIG.HEIGHT / 2, self.player_img)
         self.score = 0
         self.entityManager.clear_entity()
+        self.sound_manager.play_sfx("game_start")
 
     def update(self, dt):
 
@@ -42,6 +46,11 @@ class GameScene(Scene):
 
         for entity in self.entityManager.entities:
             if self.player.collide(entity):
+                if entity.name == "bonus":
+                    self.sound_manager.play_sfx("bonus")
+                elif entity.name == "ball":
+                    self.sound_manager.play_sfx("explosion")
+
                 self.entityManager.entities.remove(entity)
             else:
                 entity.update(dt)
@@ -55,6 +64,8 @@ class GameScene(Scene):
 
         if not self.player.is_alive():
             self.next_scene = "gameover"
+            self.sound_manager.play_sfx("game_over")
+
 
     def get_data(self):
         return {"score": self.score}

@@ -6,4 +6,5 @@ class CONFIG:
     TITLE = "Dodge Or Destroy"
     CLEAN_COLOR = (0, 0, 0)
     IMAGE_FOLDER = "assets/images"
+    AUDIO_FOLDER = "assets/audio"
     STAR_COUNT = 500

@@ -3,7 +3,7 @@ from random import randint, choice
 import pygame
 
 from config import CONFIG
-from entities.GameObjects import Ball, BALL_RADIUS, BONUS_SIZE, Bonus, BONUS_TYPE
+from entities.GameObjects import Asteroid, BALL_RADIUS, BONUS_SIZE, Bonus, BONUS_TYPE
 from util.TimeObjects import TimeCycleTrigger
 
 
@@ -24,7 +24,7 @@ class EntityManager:
         x = randint(0, CONFIG.WIDTH - BALL_RADIUS)
         y = randint(0, CONFIG.HEIGHT - BALL_RADIUS)
         img_name = "asteroid_" + str(randint(1,2))
-        self.entities.append(Ball(x, y, self.images[img_name]))
+        self.entities.append(Asteroid(x, y, self.images[img_name]))
 
 
     def clear_entity(self):
