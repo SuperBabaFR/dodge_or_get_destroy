@@ -14,11 +14,11 @@ Le projet est organisé comme suit :
 - `config.py` : Fichier de configuration contenant les paramètres du jeu.
 - `assets/` : Contient les ressources graphiques utilisées dans le jeu.
 - `data/` : Données du jeu, telles que les scores ou les paramètres sauvegardés.
-- `effects/` : Effets visuels ou sonores du jeu.
+- `effects/` : Script pour le fond étoilé animé.
 - `entities/` : Définition des entités du jeu, comme le joueur ou les obstacles.
-- `hud/` : Interface utilisateur affichée à l'écran.
+- `hud/` : Classes pour les éléments d'affichage comme les textes.
 - `scenes/` : Différentes scènes du jeu (menu, jeu, game over, etc.).
-- `util/` : Fonctions utilitaires utilisées dans le projet.
+- `util/` : SoundManager, Fonctions de collision, Classe Timer (maison).
 - `.idea/` : Fichiers de configuration de l'IDE (peut être ignoré).
 - `__pycache__/` : Dossiers de cache Python (peut être ignoré).
 
