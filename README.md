@@ -4,7 +4,7 @@
 
 ## 🎯 Objectif du jeu
 
-Le joueur contrôle un personnage qui doit éviter des obstacles apparaissant à l'écran. Le but est de rester en vie le plus longtemps possible en esquivant ces dangers.
+Le joueur contrôle un personnage qui doit éviter des obstacles apparaissant à l'écran. Le but est de rester en vie le plus longtemps possible en esquivant ces dangers, des bonus de vie ou de vitesse peuvent apparaitre pour permettre au joueur de survivre plus longtemps.
 
 ## 🧱 Structure du projet
 
